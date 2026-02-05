@@ -1,3 +1,7 @@
+<p align="center">
+   <img src="docs/images/LanPartyArcade.png" style="border-radius: 25px; height: 200px; width: auto;" alt="LAN Party Arcade" />
+</p>
+
 # 🎮 LAN Party Arcade
 
 **Transform an ESP32 into a multiplayer game server using the "Nintendo cartridge" philosophy.**
