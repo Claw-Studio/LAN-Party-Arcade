@@ -375,10 +375,15 @@ http://192.168.4.1      → 192.168.4.1
 - Each player has their own phone screen
 - Display is for setup/debugging only
 
-### V2.0: Touch Navigation (Planned)
+### Touch Navigation (V1.0 ✅)
 
-**Future enhancement:**
-- Touch to switch screens
+**Implemented:**
+- ✅ Touch to switch between connection and stats screens
+- ✅ XPT2046 resistive touchscreen support (bitbang mode)
+- ✅ Debounced touch detection with 500ms cooldown
+- ✅ Two display modes: Connection Info and System Stats
+
+**Future enhancements (V2.0):**
 - Game selection menu on display
 - Admin controls (kick players, restart)
 - Real-time game state visualization

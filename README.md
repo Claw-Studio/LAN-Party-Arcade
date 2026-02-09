@@ -26,6 +26,7 @@ The ESP32 acts as a "dumb relay" - it boots games from SD cards and routes messa
 - ✅ **mDNS support** - access via `http://play.local`
 - ✅ **Client-heavy architecture** - ESP32 just relays messages
 - ✅ **TFT display** shows WiFi QR codes and connection info
+- ✅ **Touchscreen support** - tap to toggle between screens
 - ✅ **Configurable** via JSON on SD card
 
 ---
@@ -39,6 +40,7 @@ The ESP32 acts as a "dumb relay" - it boots games from SD cards and routes messa
 - WiFi QR code (scan to connect)
 - URL QR code (scan to open game)
 - Network details (SSID, password, URL)
+- **Tap screen** to toggle to system stats view
 
 ---
 

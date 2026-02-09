@@ -83,27 +83,23 @@ void loop() {
   HTTPServer::process();
   WebSocketRelay::process();
   
-  // Handle touch input (simple detection - touch anywhere)
+  // Handle touch input (tap anywhere to toggle screens)
   static unsigned long lastTouchTime = 0;
   static bool wasTouched = false;
   uint16_t touchX = 0, touchY = 0;
   
   bool isTouched = DisplayManager::checkTouch(touchX, touchY);
   
-  // Detect touch press (rising edge)
+  // Detect touch press (rising edge with debounce)
   if (isTouched && !wasTouched && (millis() - lastTouchTime > 500)) {
     lastTouchTime = millis();
     wasTouched = true;
     
-    Serial.printf("=== SCREEN TAP DETECTED at (%d, %d) ===\n", touchX, touchY);
-    
     DisplayManager::toggleScreen();
     
     if (DisplayManager::getCurrentScreen() == Screen::CONNECTION) {
-      Serial.println("Showing: Connection Screen");
       DisplayManager::showConnectionScreen(config, actualSSID);
     } else {
-      Serial.println("Showing: Stats Screen");
       int wifiClients = WiFiManager::getConnectedClients();
       int wsClients = WebSocketRelay::getClientCount();
       DisplayManager::showStatsScreen(wifiClients, wsClients, sdCardMounted, config, actualSSID);

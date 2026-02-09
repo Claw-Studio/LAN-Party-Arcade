@@ -5,6 +5,7 @@
 
 TFT_eSPI DisplayManager::tft = TFT_eSPI();
 Screen DisplayManager::currentScreen = Screen::CONNECTION;
+XPT2046_Bitbang DisplayManager::touch = XPT2046_Bitbang(DisplayManager::TOUCH_MOSI, DisplayManager::TOUCH_MISO, DisplayManager::TOUCH_CLK, DisplayManager::TOUCH_CS);
 
 void DisplayManager::init() {
   Serial.println("Initializing display...");
@@ -18,21 +19,11 @@ void DisplayManager::init() {
   tft.setRotation(0); // Portrait mode (240x320)
   tft.fillScreen(TFT_BLACK);
   
-  // Set touch calibration for ESP32-2432S028 (portrait mode)
-  uint16_t calData[5] = {275, 3620, 264, 3532, 1};
-  tft.setTouch(calData);
+  // Initialize touchscreen using bitbang (manual pin control)
+  touchSpi.begin(TOUCH_CLK, TOUCH_MISO, TOUCH_MOSI, TOUCH_CS);
+  touch.begin();
   
-  // Display header
-  tft.setTextColor(TFT_WHITE, TFT_BLACK);
-  tft.setTextSize(2);
-  tft.setCursor(30, 10);
-  tft.println("LAN PARTY");
-  tft.setCursor(40, 30);
-  tft.println("ARCADE");
-  
-  tft.setTextSize(1);
-  tft.setCursor(10, 55);
-  tft.println("Phase 6: Polish & Display");
+  Serial.println("Touch initialized on separate SPI bus (bitbang mode)");
   
   Serial.println("Display initialized!");
   
@@ -285,7 +276,30 @@ void DisplayManager::toggleScreen() {
 }
 
 bool DisplayManager::checkTouch(uint16_t& x, uint16_t& y) {
-  return tft.getTouch(&x, &y);
+  TouchPoint p = touch.getTouch();
+  
+  // Bitbang library returns different range than hardware SPI version
+  // Observed range: x ~100-255, y ~100-255 (8-bit values!)
+  if (p.x > 50 && p.x < 300 && p.y > 50 && p.y < 300) {
+    // Log raw values periodically when touched
+    static unsigned long lastLog = 0;
+    if (millis() - lastLog > 1000) {
+      lastLog = millis();
+      Serial.printf("Touch detected: x=%d y=%d\\n", p.x, p.y);
+    }
+    
+    // Map to screen coordinates (portrait 240x320)
+    // Bitbang library appears to return 8-bit coordinates (0-255)
+    x = map(p.x, 90, 240, 0, 240);
+    y = map(p.y, 90, 210, 0, 320);
+    
+    // Clamp to screen bounds
+    if (x > 240) x = 240;
+    if (y > 320) y = 320;
+    
+    return true;
+  }
+  return false;
 }
 
 Screen DisplayManager::getCurrentScreen() {

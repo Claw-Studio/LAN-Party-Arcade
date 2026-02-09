@@ -2,6 +2,7 @@
 #define DISPLAY_H
 
 #include <TFT_eSPI.h>
+#include <XPT2046_Bitbang.h>
 #include "storage/config.h"
 #include "storage/sd_card.h"
 
@@ -38,6 +39,14 @@ private:
   static TFT_eSPI tft;
   static Screen currentScreen;
   static const uint8_t BACKLIGHT_PIN = 21;
+  
+  // Touch screen - bitbang mode (no SPI)
+  static XPT2046_Bitbang touch;
+  static const uint8_t TOUCH_IRQ = 36;
+  static const uint8_t TOUCH_MOSI = 32;
+  static const uint8_t TOUCH_MISO = 39;
+  static const uint8_t TOUCH_CLK = 25;
+  static const uint8_t TOUCH_CS = 33;
 };
 
 #endif
