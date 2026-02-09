@@ -20,7 +20,6 @@ void DisplayManager::init() {
   tft.fillScreen(TFT_BLACK);
   
   // Initialize touchscreen using bitbang (manual pin control)
-  touchSpi.begin(TOUCH_CLK, TOUCH_MISO, TOUCH_MOSI, TOUCH_CS);
   touch.begin();
   
   Serial.println("Touch initialized on separate SPI bus (bitbang mode)");
